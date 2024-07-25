@@ -173,7 +173,8 @@ input_data = [input_data]  # Assuming the model expects a 2D array
 inp_sensor_data = input_data[0][1:]
 # Predict the RUL
 predict_rul = st.sidebar.button("Predict RUL")
-if not predict_rul:
+sensor_button = st.sidebar.button("Detect Anomaly of Sensors")
+if not any([predict_rul,sensor_button]):
     
     # Title and Description
   
@@ -273,7 +274,7 @@ sensor_columns = ['T24', 'T30', 'T50', 'P30', 'Nf', 'Nc', 'Ps30', 'phi', 'NRf', 
 
 
 # Button to run anomaly detection with the provided sensor data
-if st.sidebar.button("Detect Anomaly of Sensors"):
+if sensor_button:
     # Convert inputs to DataFrame
     input_data = pd.DataFrame([inp_sensor_data], columns=sensor_columns)
     
