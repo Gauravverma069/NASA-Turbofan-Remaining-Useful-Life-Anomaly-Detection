@@ -13,6 +13,11 @@ Click to go on App-> [NASA Turbofan RUL Detection](https://huggingface.co/spaces
 - **Interactive Streamlit App**: Provides an easy-to-use interface for making predictions and visualizing data.
 - **Modular Code Structure**: Organized code for easy understanding and modifications.
 - **Extensive Documentation**: Detailed instructions and explanations to guide users through installation, usage, and contributions.
+
+
+https://github.com/user-attachments/assets/ece7cf6f-40c9-4f3f-a6f5-677b820b1bbe
+
+
 ## Table of Contents
 - [Project Overview](#project-overview)
 - [Key Features](#Key-Features)
