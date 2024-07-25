@@ -39,9 +39,10 @@ The dataset used in this project is the NASA Turbofan Engine Degradation Simulat
 - `W32`: LPT coolant bleed
 
 ## Model
-To make predictions using the trained model,
+To make RUL predictions using the trained model, and Anomaly Detection.
 
 --model random_forest_model.joblib [model](https://huggingface.co/spaces/Gaurav069/NASA_Turbofan_RUL_and_Anomaly_Prediction_Playground/blob/main/random_forest_model.joblib)
+--model AnomalyDetection.joblib [isolation_forest](https://huggingface.co/spaces/Gaurav069/NASA_Turbofan_RUL_and_Anomaly_Prediction_Playground/blob/main/AnomalyDetection.joblib)
 
 ## Contributing
 Contributions are welcome! Please follow these steps to contribute:
