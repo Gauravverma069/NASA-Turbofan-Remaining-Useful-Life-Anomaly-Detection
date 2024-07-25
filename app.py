@@ -4,22 +4,21 @@ import joblib
 import numpy as np
 import pandas as pd
 
+from sklearn.ensemble import IsolationForest
+
+
 st.set_page_config(
     page_title="NASA Turbofan Playground",
     page_icon="🧊",
     initial_sidebar_state="expanded",
-    menu_items={
-        'Get Help': 'https://www.extremelycoolapp.com/help',
-        'Report a bug': "https://www.extremelycoolapp.com/bug",
-        'About': "# This is a header. This is an *extremely* cool app!"
-    }
+    
 )
 
 # Set the background image
 background_image = """
 <style>
 [data-testid="stAppViewContainer"] > .main {
-    background-image: url("https://w.wallhaven.cc/full/q6/wallhaven-q6vpxr.png");
+    background-image: url("https://w.wallhaven.cc/full/yx/wallhaven-yxldyk.jpg");
     background-size: 100vw 100vh;  # This sets the size to cover 100% of the viewport width and height
     background-position: center;  
     background-repeat: no-repeat;
@@ -40,13 +39,13 @@ html_code = """
 
 <style>
 @keyframes rainbow-text-animation {
-  0% { color: red; }
-  16.67% { color: orange; }
-  33.33% { color: yellow; }
-  50% { color: green; }
-  66.67% { color: blue; }
-  83.33% { color: indigo; }
-  100% { color: violet; }
+  0% { color: white; }
+  16.67% { color: grey; }
+  33.33% { color: grey; }
+  50% { color: black; }
+  66.67% { color: grey; }
+  83.33% { color: white; }
+  100% { color: white; }
 }
 
 .title-container {
@@ -57,24 +56,24 @@ html_code = """
 }
 
 .neon-text {
-  font-family: Times New Roman, sans-serif;
+  font-family: Trebuchet MS , sans-serif;
   font-size: 4em;
   margin: 0;
   animation: rainbow-text-animation 5s infinite linear;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8),
-               0 0 10px rgba(255, 255, 255, 0.7),
-               0 0 20px rgba(255, 255, 255, 0.6),
-               0 0 40px rgba(255, 0, 255, 0.6),
-               0 0 80px rgba(255, 0, 255, 0.6),
-               0 0 90px rgba(255, 0, 255, 0.6),
-               0 0 100px rgba(255, 0, 255, 0.6),
-               0 0 150px rgba(255, 0, 255, 0.6);
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.8),
+               0 0 10px rgba(0, 0, 0, 0.7),
+               0 0 20px rgba(0, 0, 0, 0.6),
+               0 0 40px rgba(0, 0, 0, 0.6),
+               0 0 80px rgba(0, 0, 0, 0.6),
+               0 0 90px rgba(0, 0, 0, 0.6),
+               0 0 100px rgba(0, 0, 0, 0.6),
+               0 0 150px rgba(0, 0, 0, 0.6);
 }
 </style>
 """
 
 st.markdown(html_code, unsafe_allow_html=True)
-st.divider()
+
 
 st.markdown(
     """
@@ -163,16 +162,59 @@ for col, limits in columns.items():
 
 # Main page
 # st.title("Turbofan Engine RUL Prediction")
-st.markdown('<p class="message-box">Turbofan Engine RUL Prediction</p>', unsafe_allow_html=True)
-st.markdown('<p class="success-message2">Provide the necessary inputs in the sidebar to predict the Remaining Useful Life (RUL) of the turbofan engine.</p>', unsafe_allow_html=True)
+# st.markdown('<p class="message-box">Turbofan Engine RUL Prediction and Anomaly Detection</p>', unsafe_allow_html=True)
+# st.markdown('<p class="success-message2">Provide the necessary inputs in the sidebar to predict the Remaining Useful Life (RUL) of the turbofan engine.</p>', unsafe_allow_html=True)
 # st.write("Provide the necessary inputs in the sidebar to predict the Remaining Useful Life (RUL) of the turbofan engine.")
 
 # Prepare the input for prediction
 input_data = [inputs[col] for col in columns]
 input_data = [input_data]  # Assuming the model expects a 2D array
 
+inp_sensor_data = input_data[0][1:]
 # Predict the RUL
-if st.sidebar.button("Predict RUL"):
+predict_rul = st.sidebar.button("Predict RUL")
+if not predict_rul:
+    
+    # Title and Description
+  
+    st.write("Welcome to the NASA Turbofan Playground. This tool leverages machine learning "
+            "to predict Remaining Useful Life (RUL) and detect anomalies in turbofan engine sensor data.")
+    st.divider()
+    # About the Application
+    st.header("About the Application")
+    st.markdown("""
+    This application provides two main features:
+    - **Remaining Useful Life (RUL) Prediction:** Predicts when a turbofan engine is likely to fail based on its current sensor readings.
+    - **Sensor Anomaly Detection:** Identifies anomalies in the sensor data to detect potential issues before they lead to failures.
+    """)
+    st.divider()
+    # Key Features
+    st.header("Key Features")
+    st.markdown("""
+    - **RUL Prediction:** Input current sensor readings manually or via file upload to predict RUL.
+    - **Anomaly Detection:** Detect anomalies in sensor readings to monitor engine health.
+    """)
+    st.divider()
+    # Supported Sensors
+    st.header("Supported Sensors")
+    st.markdown("""
+    - **Temperature Sensors:** T24, T30, T50
+    - **Pressure Sensors:** P30, Ps30
+    - **Speed Sensors:** Nf, Nc, NRf, NRc
+    - **Bleed Air Sensors:** BPR, htBleed
+    - **Flow Sensors:** W31, W32
+    - **Other Parameters:** phi
+    """)
+    st.divider()
+    # Technology Stack
+    st.header("Technology Stack")
+    st.markdown("""
+    - **Frontend:** Streamlit
+    - **Backend:** Python
+    - **Machine Learning Models:** Random Forest (RUL Prediction), Isolation Forest (Anomaly Detection)
+    """)
+
+if predict_rul:
     prediction = model.predict(input_data)
     predicted_rul = int(prediction[0])
     input_cycles = inputs['cycles']
@@ -220,3 +262,43 @@ if st.sidebar.button("Predict RUL"):
         st.markdown(f'<p class="unsuccess-message">Potential anomaly detected in sensor: {anomaly_sensor}.</p>', unsafe_allow_html=True)
 
    
+
+# Load the pre-trained model
+model_path = 'AnomalyDetection.joblib'
+iso_forest = joblib.load(model_path)
+
+# Define sensor columns based on the dataset (excluding 'RUL' since it's not used for anomaly detection)
+sensor_columns = ['T24', 'T30', 'T50', 'P30', 'Nf', 'Nc', 'Ps30', 'phi', 'NRf', 'NRc', 'BPR', 'htBleed', 'W31', 'W32']
+
+
+
+# Button to run anomaly detection with the provided sensor data
+if st.sidebar.button("Detect Anomaly of Sensors"):
+    # Convert inputs to DataFrame
+    input_data = pd.DataFrame([inp_sensor_data], columns=sensor_columns)
+    
+    # Predict anomaly
+    anomaly_score = iso_forest.decision_function(input_data)
+    anomaly_flag = iso_forest.predict(input_data)
+    
+    # Display results
+    st.write(f"Anomaly Score: {anomaly_score[0]:.4f}")
+    if anomaly_flag[0] == -1:
+        st.write("Anomaly Detected!")
+    else:
+        st.write("No Anomaly Detected.")
+
+    # Identify contributing sensors
+    sensor_importance = {}
+    for sensor in sensor_columns:
+        input_temp = input_data.copy()
+        input_temp[sensor] = 0  # Remove the influence of this sensor
+        temp_scores = iso_forest.decision_function(input_temp)
+        importance = np.mean(np.abs(anomaly_score - temp_scores))
+        sensor_importance[sensor] = importance
+
+    sorted_sensors = sorted(sensor_importance.items(), key=lambda x: x[1], reverse=True)
+    
+    st.write("Sensors contributing to anomalies in descending order of importance: ")
+    for sensor, importance in sorted_sensors:
+        st.write(f"{sensor}: {importance:.4f}")
